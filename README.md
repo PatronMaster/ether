@@ -14,13 +14,26 @@ interacting with it are documented in the [JSON RPC
 page](https://github.com/ethereum/wiki/wiki/JSON-RPC) on the Ethereum
 Wiki.
 
+## Differences in relation to the main package
+
+New function eth_getTokenBalance, get balance of one ETH address
+Example:
+
+``` r
+#eth_getTokenBalance(token_address = "0x2b591e99afe9f32eaa6214f7b7629768c40eeb39",address ="0xb96376d80a16af6700dcbaba2a459dd7856f103a")
+```
+
+eth_call fist step made. Accepts to and data
+https://eth.wiki/json-rpc/API#eth_call
+
+
 ## Installation
 
 Install from GitHub using
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("datawookie/ether")
+devtools::install_github("PatronMaster/ether")
 ```
 
 Alternatively there is a stable version listed on CRAN.

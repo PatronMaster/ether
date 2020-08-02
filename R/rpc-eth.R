@@ -126,6 +126,61 @@ eth_getBalance <- function(address = NULL, number = "latest") {
   get_post_response("eth_getBalance", list(address, number)) %>% mpfr(base = 16)
 }
 
+
+
+#' Executes a new message call immediately without creating a transaction on the block chain.
+#'
+#' Not completed just to_address and data
+#' https://eth.wiki/json-rpc/API#eth_accounts
+#'
+#'
+#'
+#' @examples
+#' \dontrun{
+#' #eth_call(to_address =token_address,data = data)
+#' #eth_call(to_address ="0x0D8775F648430679A709E98d2b0Cb6250d2887EF",
+#' #data = "0x70a08231000000000000000000000000D79D326318aa8aBd5B84984dd5F258f7B5ecD356")
+#' }
+eth_call <- function(from_address = NULL,to_address, gas = NULL ,gasPrice = NULL ,value = NULL, data = NULL ,number = "latest") {
+  if (is.null(to_address)) {
+     stop("Must specify address.")
+  }
+  to_data<-list(to = to_address, data = data)
+
+  if (!is.null(data)) {
+    get_post_response("eth_call", list(to_data, number))%>% mpfr(base = 16)
+  }
+
+ #get_post_response("eth_call", list(address, number)) %>% mpfr(base = 16)
+}
+
+#' Returns the tokens balance of the account at specified address.
+#'
+#' @param token_address A 20 byte (hexadecimal) Token address.
+#' @param address A 20 byte (hexadecimal) Ethereum address.
+#'
+#' @return Integer.
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' #' eth_getTokenBalance(token_address = "0x2b591e99afe9f32eaa6214f7b7629768c40eeb39",
+#' # address = "0xb96376d80a16af6700dcbaba2a459dd7856f103a")
+#' }
+eth_getTokenBalance <- function(token_address,address) {
+  if (is.null(address)|| is.null(token_address)) {
+    stop("Must specify address.")
+  }
+  balanceOf<- "0x70a08231"
+  decimals<-"0x313ce567"
+  pathing <- "000000000000000000000000"
+  address<-gsub("0x","",address)
+  data<-paste0(decimals,pathing,address)
+  Tokendecimals<-eth_call(to_address =token_address,data = data )
+  data<-paste0(balanceOf,pathing,address)
+  eth_call(to_address =token_address,data = data)/(10^Tokendecimals)
+}
+
 #' Returns the value from a storage position at a given address.
 #'
 #' @param address A 20 byte (hexadecimal) Ethereum address.
@@ -372,3 +427,4 @@ eth_getUncleByBlockHashAndIndex <- function(hash, index) {
 eth_getUncleByBlockNumberAndIndex <- function(number, index) {
   get_post_response("eth_getUncleByBlockNumberAndIndex", list(number, index))
 }
+
